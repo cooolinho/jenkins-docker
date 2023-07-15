@@ -1,6 +1,6 @@
 ## Build the Jenkins Docker Image
 ```shell
-docker build -t cooolinho_jenkins .
+docker build -t jenkins-docker .
 ```
 
 ## Create Docker Network
@@ -10,7 +10,7 @@ docker network create jenkins
 
 ## Run the container
 ```shell
-docker run --name cooolinho-jenkins \
+docker run --name jenkins \
   --restart=on-failure \
   --detach \
   --privileged \
@@ -22,19 +22,19 @@ docker run --name cooolinho-jenkins \
   --volume jenkins-docker-certs:/certs/client:ro \
   --publish 8080:8080 \
   --publish 50000:50000 \
-  cooolinho_jenkins
+  jenkins-docker
 ```
 
 ## Get the initial Password
 ```shell
-docker exec cooolinho-jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
 ## Routing Docker Agens with Docker Desktop
 ```shell
 docker run -d \
   --restart=always \
-  --name=cooolinho-jenkins-socat \
+  --name=jenkins-socat \
   --network jenkins \
   -p 127.0.0.1:2376:2375 \
   -v /var/run/docker.sock:/var/run/docker.sock alpine/socat tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
@@ -42,7 +42,7 @@ docker run -d \
 
 ### Get Ip Address from socat server
 ```shell
-docker inspect cooolinho-jenkins-socat | grep IPAddress
+docker inspect jenkins-socat | grep IPAddress
 ```
 
 ### Docker Cloud Agent
