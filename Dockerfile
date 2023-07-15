@@ -15,4 +15,5 @@ USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-plugin docker-workflow ssh-agent"
 
 # Add github to known hosts for private repositories
+RUN mkdir ~/.ssh
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts

@@ -24,6 +24,8 @@ docker run --name jenkins \
   --publish 50000:50000 \
   jenkins-docker
 ```
+### Run - Windows Troubleshots
+You have to run this has "inline" command in Powershell or CommandPrompt. Git Bash generates wrong path variables for CERT_PATH. 
 
 ## Get the initial Password
 ```shell
