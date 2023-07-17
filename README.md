@@ -55,3 +55,12 @@ tcp://<IPAddress>:2375
 ```
 
 ## Add id_rsa.pub to GitHub SSH
+### Get the id_rsa.pub
+```shell
+docker exec jenkins cat /var/jenkins_home/.ssh/id_rsa.pub
+```
+
+## Add id_rsa to Jenkins Credentials
+```shell
+docker exec jenkins cat /var/jenkins_home/.ssh/id_rsa
+```

@@ -14,8 +14,9 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-plugin docker-workflow ssh-agent"
 
-# Add github to known hosts for private repositories
-RUN mkdir ~/.ssh
-COPY ./docker/.ssh/id_rsa /home/jenkins/.ssh/id_rsa
-COPY ./docker/.ssh/id_rsa.pub /home/jenkins/.ssh/id_rsa.pub
-RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+## Generate SSH Files
+RUN mkdir -p /var/jenkins_home/.ssh
+COPY ./docker/.ssh/config /var/jenkins_home/.ssh/config
+RUN ssh-keygen -q -t rsa -N '' -f /var/jenkins_home/.ssh/id_rsa
+
+
