@@ -14,9 +14,5 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-plugin docker-workflow ssh-agent"
 
-## Generate SSH Files
-RUN mkdir -p /var/jenkins_home/.ssh
+# Copy SSH Files
 COPY ./docker/.ssh/config /var/jenkins_home/.ssh/config
-RUN ssh-keygen -q -t rsa -N '' -f /var/jenkins_home/.ssh/id_rsa
-
-

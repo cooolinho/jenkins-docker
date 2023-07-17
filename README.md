@@ -10,19 +10,7 @@ docker network create jenkins
 
 ## Run the container
 ```shell
-docker run --name jenkins \
-  --restart=on-failure \
-  --detach \
-  --privileged \
-  --network jenkins \
-  --env DOCKER_HOST=tcp://docker:2376 \
-  --env DOCKER_CERT_PATH="/certs/client" \
-  --env DOCKER_TLS_VERIFY=1 \
-  --volume jenkins-data:/var/jenkins_home \
-  --volume jenkins-docker-certs:/certs/client:ro \
-  --publish 8080:8080 \
-  --publish 50000:50000 \
-  jenkins-docker
+docker run --name jenkins --restart=on-failure --detach --privileged --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH="/certs/client" --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --publish 8080:8080 --publish 50000:50000 jenkins-docker
 ```
 
 ### Run - Windows Troubleshots
@@ -54,13 +42,32 @@ docker inspect jenkins-socat | grep IPAddress
 tcp://<IPAddress>:2375
 ```
 
-## Add id_rsa.pub to GitHub SSH
-### Get the id_rsa.pub
-```shell
-docker exec jenkins cat /var/jenkins_home/.ssh/id_rsa.pub
-```
+## Jenkins Configuration
+### 1. Git Host Key Verification Configuration
+``Dashboard > Jenkins verwalten > Security > "Accept First Connection"``
 
-## Add id_rsa to Jenkins Credentials
-```shell
-docker exec jenkins cat /var/jenkins_home/.ssh/id_rsa
-```
+### 2. Add SSH Credentials
+``Dashboard > Jenkins verwalten > Zugangsdaten > System > Globale Zugangsdaten``
+
+#### Jenkins GitHub
+1. Create new SSH Credential with ``private key (id_rsa)``
+2. Add  ``public key (id_rsa.pub)`` to [GitHub](https://github.com/settings/keys)
+
+#### Jenkins Deployment Key
+1. Create new SSH Credential with ``private key (id_rsa)``
+2. Add  ``public key (id_rsa.pub)`` to ``<user>/.ssh/authorized_keys``
+
+#### 3. Docker Cloud
+1. ``Dashboard > Jenkins verwalten > Clouds > New cloud``
+2. Cloud
+    - ``Cloud Name = cloud``
+    - ``Type = docker``
+3. Add Cloud Details
+   - ``Docker Host URI = tcp://<jenkins-socat-ip>:<jenkins-socat-port>`` (look at "Get Ip Address from socat server")
+   - ``Enabled = true``
+4. Add Agent Template
+    - ``Label``
+    - ``Enabled = true``
+    - ``Name``
+    - ``Docker Image``
+    - ``Instance Capacity = 2``
