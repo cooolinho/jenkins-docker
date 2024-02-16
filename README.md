@@ -9,8 +9,9 @@ docker network create jenkins
 ```
 
 ## Run the container
-```shell
-docker run --name jenkins --restart=on-failure --detach --privileged --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH="/certs/client" --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --publish 8080:8080 --publish 50000:50000 jenkins-docker
+Run in powershell
+```bash
+sh run_docker.sh
 ```
 
 ### Run - Windows Troubleshots
@@ -22,13 +23,9 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
 ## Routing Docker Agens with Docker Desktop
+Run in powershell
 ```shell
-docker run -d \
-  --restart=always \
-  --name=jenkins-socat \
-  --network jenkins \
-  -p 127.0.0.1:2376:2375 \
-  -v /var/run/docker.sock:/var/run/docker.sock alpine/socat tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+docker run -d --restart=always --name=jenkins-socat --network jenkins -p 127.0.0.1:2376:2375 -v /var/run/docker.sock:/var/run/docker.sock alpine/socat tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
 ```
 
 ### Get Ip Address from socat server
@@ -71,3 +68,26 @@ tcp://<IPAddress>:2375
     - ``Name``
     - ``Docker Image``
     - ``Instance Capacity = 2``
+
+## Update Jenkins
+1.Change version in Dockerfile
+```
+# Dockerfile
+FROM jenkins/jenkins:2.XXX
+```
+2.Shutdown and remove Docker Container
+```bash
+docker stop jenkins
+```
+```bash
+docker rm jenkins
+```
+3.Build new Jenkins Image
+```bash
+docker build -t jenkins-docker .
+```
+4.Run the Container
+```bash
+# Run in powershell bc of path problems with cert path
+sh run_docker.sh
+```
