@@ -1,4 +1,5 @@
-FROM jenkins/jenkins:2.499
+ARG JENKINS_VERSION=latest
+FROM jenkins/jenkins:${JENKINS_VERSION}
 
 USER root
 

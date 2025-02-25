@@ -1,7 +1,10 @@
 services:
   jenkins:
     container_name: jenkins
-    image: "cooolinho/jenkins-docker:${JENKINS_VERSION:-latest}"
+    build:
+      context: .
+      args:
+        JENKINS_VERSION: "${JENKINS_VERSION}"
     restart: unless-stopped
     privileged: true
     ports:
