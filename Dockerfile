@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.445
+FROM jenkins/jenkins:2.499
 
 USER root
 
@@ -12,7 +12,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
 RUN apt-get update && apt-get install -y docker-ce-cli
 
 USER jenkins
-RUN jenkins-plugin-cli --plugins "blueocean docker-plugin docker-workflow ssh-agent"
+RUN jenkins-plugin-cli --plugins "blueocean docker-plugin docker-workflow ssh-agent git-parameter"
 
 # Copy SSH Files
 COPY ./docker/.ssh/config /var/jenkins_home/.ssh/config

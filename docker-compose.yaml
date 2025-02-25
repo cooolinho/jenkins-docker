@@ -1,7 +1,7 @@
 services:
   jenkins:
     container_name: jenkins
-    image: cooolinho/jenkins-docker:latest
+    image: "cooolinho/jenkins-docker:${JENKINS_VERSION:-latest}"
     restart: unless-stopped
     privileged: true
     ports:
@@ -19,7 +19,7 @@ services:
 
   socat:
     container_name: socat
-    image: alpine/socat
+    image: "alpine/socat:${SOCAT_VERSION:-latest}"
     restart: always
     command: "tcp-listen:2375,fork,reuseaddr unix-connect:${SOCAT_DOCKER_PATH}"
     ports:
