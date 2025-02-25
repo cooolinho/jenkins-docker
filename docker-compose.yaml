@@ -1,0 +1,38 @@
+services:
+  jenkins:
+    container_name: jenkins
+    image: cooolinho/jenkins-docker:latest
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "${JENKINS_WEB_PORT:-8080}:8080"
+      - "${JENKINS_AGENT_PORT:-50000}:50000"
+    volumes:
+      - "jenkins_docker_certs_data:/certs/client:ro"
+      - "jenkins_docker_data:/var/jenkins_home"
+    environment:
+      - "DOCKER_TLS_VERIFY=${JENKINS_DOCKER_TLS_VERIFY}"
+      - "DOCKER_CERT_PATH=${JENKINS_DOCKER_CERT_PATH}"
+      - "DOCKER_HOST=${JENKINS_DOCKER_HOST}"
+    networks:
+      jenkins: {}
+
+  socat:
+    container_name: socat
+    image: alpine/socat
+    restart: always
+    command: "tcp-listen:2375,fork,reuseaddr unix-connect:${SOCAT_DOCKER_PATH}"
+    ports:
+      - "${SOCAT_PORT:-2375}:2375"
+    volumes:
+      - "${SOCAT_DOCKER_PATH}:/var/run/docker.sock"
+    networks:
+      jenkins: {}
+
+volumes:
+  jenkins_docker_data:
+  jenkins_docker_certs_data:
+
+networks:
+  jenkins:
+    driver: bridge

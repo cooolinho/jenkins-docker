@@ -41,7 +41,7 @@ tcp://<IPAddress>:2375
 
 ## Jenkins Configuration
 ### 1. Git Host Key Verification Configuration
-``Dashboard > Jenkins verwalten > Security > "Accept First Connection"``
+``Dashboard > Jenkins verwalten > Security > Host Key Verification Strategy > "Accept First Connection"``
 
 ### 2. Add SSH Credentials
 ``Dashboard > Jenkins verwalten > Zugangsdaten > System > Globale Zugangsdaten``
@@ -49,6 +49,13 @@ tcp://<IPAddress>:2375
 #### Jenkins GitHub
 1. Create new SSH Credential with ``private key (id_rsa)``
 2. Add  ``public key (id_rsa.pub)`` to [GitHub](https://github.com/settings/keys)
+
+##### Troubleshooting
+###### "Bad owner or permissions on /var/jenkins_home/.ssh/config"
+```
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/*
+```
 
 #### Jenkins Deployment Key
 1. Create new SSH Credential with ``private key (id_rsa)``
@@ -90,4 +97,10 @@ docker build -t jenkins-docker .
 ```bash
 # Run in powershell bc of path problems with cert path
 sh run_docker.sh
+```
+
+## Use docker.sh to create, tag, push and run image to DockerHub
+### Powershell
+```bash
+sh docker.sh
 ```
